@@ -1,0 +1,109 @@
+dn: uid=Haridutt,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Haridutt
+userpassword: Haridutt
+sn: patel
+givenName: Haridutt patel
+cn: Haridutt
+
+dn: uid=Harilal,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harilal
+userpassword: Harilal
+sn: patel
+givenName: Harilal patel
+cn: Harilal
+
+dn: uid=Harith,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harith
+userpassword: Harith
+sn: patel
+givenName: Harith patel
+cn: Harith
+
+dn: uid=Harman,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harman
+userpassword: Harman
+sn: patel
+givenName: Harman patel
+cn: Harman
+
+dn: uid=Harmendra,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harmendra
+userpassword: Harmendra
+sn: patel
+givenName: Harmendra patel
+cn: Harmendra
+
+dn: uid=Harsh,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harsh
+userpassword: Harsh
+sn: patel
+givenName: Harsh patel
+cn: Harsh
+
+dn: uid=Harshad,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harshad
+userpassword: Harshad
+sn: patel
+givenName: Harshad patel
+cn: Harshad
+
+dn: uid=Harshal,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harshal
+userpassword: Harshal
+sn: patel
+givenName: Harshal patel
+cn: Harshal
+
+dn: uid=Harshul,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harshul
+userpassword: Harshul
+sn: patel
+givenName: Harshul patel
+cn: Harshul
+
+dn: uid=Harsith,cn=employee,dc=myorg,dc=com
+objectclass: organizationalPerson
+objectclass: person
+objectclass: top
+objectclass: inetOrgPerson
+uid: Harsith
+userpassword: Harsith
+sn: patel
+givenName: Harsith patel
+cn: Harsith

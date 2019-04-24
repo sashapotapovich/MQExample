@@ -1,0 +1,24 @@
+version: "3"
+services:
+  mail:
+    build:
+      context: mail
+      dockerfile: Dockerfile
+    image: mail
+    ports:
+    - 8025:8025
+  message-broker:
+    build:
+      context: message-broker
+      dockerfile: Dockerfile
+    image: message-broker
+    ports:
+      - 1414:1414
+  ldap:
+    build:
+      context: ldap
+      dockerfile: Dockerfile
+    image: ldap
+    ports:
+      - 389:389
+      - 636:636
