@@ -4,9 +4,9 @@ services:
     build:
       context: mail
       dockerfile: Dockerfile
-    image: mail
     ports:
     - 8025:8025
+    - 1025:1025
   message-broker:
     build:
       context: message-broker
@@ -18,7 +18,12 @@ services:
     build:
       context: ldap
       dockerfile: Dockerfile
-    image: ldap
     ports:
-      - 389:389
-      - 636:636
+      - 10389:10389
+      - 10636:10636
+  database:
+    build:
+      context: postgres
+      dockerfile: Dockerfile
+    ports:
+      - 5432:5432

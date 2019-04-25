@@ -5,62 +5,61 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Stream;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+@Slf4j
 public final class MessageReceiver implements AutoCloseable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageReceiver.class);
 
     private final MessageBrokerEndpoint endpoint;
-    private final MessageConsumer consumer;
+    private MessageConsumer consumer;
 
-    public MessageReceiver(MessageBrokerEndpoint endpoint, MessageConsumer consumer) {
+    @Autowired
+    public MessageReceiver(MessageBrokerEndpoint endpoint) {
         this.endpoint = endpoint;
-        this.consumer = consumer;
     }
 
-    public MessageReceiver(MessageBrokerEndpoint endpoint) throws JMSException {
-        this(endpoint,
-             endpoint.getSession().createConsumer(endpoint.getDestination())
-        );
-    }
-
-    public Message receive() throws JMSException, IllegalStateException {
+    public Message receive(String queueName, long timeoutSeconds) throws JMSException, IllegalStateException {
+        log.info("Trying to receiveAndSendEmail message");
         endpoint.getConnection().start();
-        return consumer.receive();
-    }
-
-    public Object receive(long timeout) throws JMSException, IllegalStateException {
-        LOGGER.info("Trying to receive message");
-        endpoint.getConnection().start();
-        CompletableFuture future = CompletableFuture.supplyAsync(() -> WrappedRuntimeException.get(this::receive));
-        Optional<Object> message = Optional.empty();
+        setQueue(queueName);
+        consumer = endpoint.getSession().createConsumer(endpoint.getDestination());
+        CompletableFuture<Message> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                return consumer.receive();
+            } catch (JMSException e) {
+                log.error(e.toString());
+            }
+            return null;
+        });
+        Optional<Message> message = Optional.empty();
         try {
-            message = Optional.of(future.get(timeout, TimeUnit.SECONDS));
+            message = Optional.of(future.get(timeoutSeconds, TimeUnit.SECONDS));
         } catch (InterruptedException | TimeoutException | ExecutionException ex) {
-            LOGGER.error("{}", ex);
+            log.error("{}", ex);
         }
-        LOGGER.info("Message received");
+        consumer.close();
         return message.orElseThrow(() -> new AssertionError("Message was not received"));
+    }
+
+    private void setQueue(String queueName) throws JMSException {
+        endpoint.setDestination(queueName);
     }
 
     @Override
     public void close() {
         try {
-            Stream.of(consumer, endpoint.getSession(), endpoint.getConnection())
-                  .forEachOrdered(closeable -> {
-                      try {
-                          closeable.close();
-                      } catch (Exception ex) {
-                          LOGGER.warn("{}", ex);
-                      }
-                  });
-        } catch (Exception ex) {
-            LOGGER.warn("{}", ex);
+            if (consumer != null)
+                consumer.close();
+            endpoint.getSession().close();
+            endpoint.getConnection().close();
+        } catch (JMSException ex){
+            log.error(ex.toString());
         }
     }
 }

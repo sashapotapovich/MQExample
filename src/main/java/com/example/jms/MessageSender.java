@@ -5,50 +5,51 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.TextMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
+@Slf4j
 public final class MessageSender implements AutoCloseable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
 
     private final MessageBrokerEndpoint endpoint;
-    private final MessageProducer producer;
+    private MessageProducer producer;
 
-
-    public MessageSender(MessageBrokerEndpoint endpoint, MessageProducer producer) {
+    @Autowired
+    public MessageSender(MessageBrokerEndpoint endpoint) {
         this.endpoint = endpoint;
-        this.producer = producer;
     }
 
-    public MessageSender(MessageBrokerEndpoint endpoint) throws JMSException {
-        this(endpoint,
-             endpoint.getSession().createProducer(endpoint.getDestination())
-        );
-    }
-
-    public Message send(String string) throws JMSException, IllegalStateException {
-        LOGGER.info("Start sending message");
+    public Message send(String queueName, String messageString) throws JMSException, IllegalStateException {
+        setQueue(queueName);
+        producer = endpoint.getSession().createProducer(endpoint.getDestination());
+        log.info("Start sending message");
         endpoint.getConnection().start();
         TextMessage message = endpoint.getSession().createTextMessage();
-        if (string != null) {
-            message.setText(string);
+        if (messageString != null) {
+            message.setText(messageString);
         }
         producer.send(message);
-        LOGGER.info("Message sent");
+        log.info("Message sent");
+        producer.close();
         return message;
+    }
+
+    private void setQueue(String queueName) throws JMSException {
+        endpoint.setDestination(queueName);
     }
 
     @Override
     public void close() {
-        Stream.of(producer, endpoint.getSession(), endpoint.getConnection())
-              .forEachOrdered(closeable -> {
-                  try {
-                      closeable.close();
-                  } catch (Exception ex) {
-                      LOGGER.warn("{}", ex);
-                  }
-              });
+        try {
+            if (producer != null) 
+                producer.close();
+            endpoint.getSession().close();
+            endpoint.getConnection().close();
+        } catch (JMSException ex){
+            log.error(ex.toString());
+        }
     }
 
 }

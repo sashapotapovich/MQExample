@@ -4,6 +4,6 @@ COPY setup /setup
 
 RUN cp /setup/custom.ldif /mnt/custom.ldif
 
-EXPOSE 389 636
+EXPOSE 10389 10636
 
-CMD ["java", "-jar", "/ldap-server.jar", "-p", "389", "/mnt/custom.ldif"]
+CMD ["java", "-jar", "/ldap-server.jar", "-p", "10389", "/mnt/custom.ldif"]
