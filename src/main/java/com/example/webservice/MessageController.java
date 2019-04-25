@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MessageController {
 
+    private final String DEAD_LETTER = "DEV.DEAD.LETTER.QUEUE";
     private MessageRepository repository;
     private MessageSendingEndpoint sendingEndpoint;
 
@@ -35,6 +36,7 @@ public class MessageController {
             }
         } else {
             log.error("Queue with the name - {} was not found", queue);
+            sendingEndpoint.sendMessage(DEAD_LETTER, message.getText());
         }
     }
 
