@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 
 @Data
@@ -17,14 +18,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private String searchBase;
     private String url;
     private String passwordAttribute;
+    private String managerDN;
+    private String managerPassword;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+                .csrf().disable()
+            .authorizeRequests()
                 .anyRequest().fullyAuthenticated()
-                .and()
-                .formLogin();
+            .and()
+                .httpBasic()
+            .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
@@ -35,6 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .groupSearchBase(searchBase)
                 .contextSource()
                     .url(url)
+                .managerDn(managerDN)
+                .managerPassword(managerPassword)
                     .and()
                 .passwordCompare()
                     .passwordEncoder(new LdapShaPasswordEncoder())

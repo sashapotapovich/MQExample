@@ -11,14 +11,16 @@ import org.springframework.stereotype.Component;
 public class Receiver {
 
     private EmailService emailService;
-    
-    public Receiver(EmailServiceImpl emailService){
+
+    public Receiver(EmailServiceImpl emailService) {
         this.emailService = emailService;
     }
-    
+
     @JmsListener(destination = "DEV.QUEUE.1")
+    @JmsListener(destination = "DEV.QUEUE.2")
+    @JmsListener(destination = "DEV.QUEUE.3")
     public void receiveMessage(String message) {
-        log.info("Message from the queue DEV.QUEUE.1 received, sending a email");
+        log.info("Message from the received, sending a email");
         emailService.sendSimpleMessage("sci@sci.comn", "Message Received", message);
     }
 

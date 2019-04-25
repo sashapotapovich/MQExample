@@ -24,11 +24,6 @@ objectclass: top
 objectclass: organizationalUnit
 ou: space cadets
 
-dn: ou=\"quoted people\",dc=springframework,dc=org
-objectclass: top
-objectclass: organizationalUnit
-ou: "quoted people"
-
 dn: ou=otherpeople,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit
@@ -83,16 +78,6 @@ cn: slash/guy
 sn: Slash
 uid: slashguy
 userPassword: slashguyspassword
-
-dn: cn=quote\"guy,ou=\"quoted people\",dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: quote\"guy
-sn: Quote
-uid: quoteguy
-userPassword: quoteguyspassword
 
 dn: uid=space cadet,ou=space cadets,dc=springframework,dc=org
 objectclass: top
