@@ -1,12 +1,10 @@
 plugins {
     id 'org.springframework.boot' version '2.1.4.RELEASE'
     id 'java'
+    id 'eclipse'
+    id 'idea'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.example'
@@ -20,7 +18,6 @@ configurations {
 }
 
 bootJar {
-    mainClass = 'com.example.DemoApplication'
 }
 
 repositories {
